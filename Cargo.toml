@@ -19,7 +19,7 @@ embedded-svc = { version = "0.26.1", default-features = false, features = [] }
 embedded-io = "0.4.0"
 heapless = { version = "0.7.14", default-features = false }
 embassy-time = "0.1.5"
-embassy-executor = { vesion = "0.3.1", features = ["nightly", "integrated-timers","arch-riscv32","executor-thread"] }
+embassy-executor = { version = "=0.3.2", features = ["nightly", "integrated-timers","arch-riscv32","executor-thread"] }
 
 static_cell = { version="=1.2.0", features = ["nightly"] }
 embassy-sync = "0.3.0"
@@ -30,7 +30,7 @@ embassy-net = { version = "0.2.1", features = ["nightly","medium-ip", "tcp", "me
 embedded-hal-async = "1.0.0-rc.1"
 embassy-net-driver = "0.2.0"
 embedded-io-async = { version = "0.6.0" }
-picoserve = "0.2.2"
+picoserve = "0.2.3"
 
 serde = { version = "1.0", default-features = false, features = ["derive"] }
 serde_json = { version = "1.0.108", features = ["alloc"], default-features = false }

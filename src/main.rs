@@ -4,6 +4,7 @@
 
 extern crate alloc;
 use core::mem::MaybeUninit;
+use alloc::borrow::ToOwned;
 use embassy_executor::Executor;
 use embassy_net::{Config, Stack, StackResources};
 use embassy_time::{Timer, Duration};
@@ -12,7 +13,7 @@ use esp_println::println;
 use esp_wifi::{EspWifiInitFor, initialize, wifi::{WifiStaDevice, WifiController, WifiState, WifiEvent, WifiDevice}};
 use hal::{clock::ClockControl, peripherals::Peripherals, prelude::*, IO, timer::TimerGroup, embassy, systimer::SystemTimer, Rng};
 
-use picoserve::{Router, routing::get, response::IntoResponse};
+use picoserve::{Router, routing::get, response::{IntoResponse, HeadersIter}};
 
 
 use static_cell::make_static;
@@ -116,7 +117,7 @@ fn main() -> ! {
 }
 
 async fn get_root()-> impl IntoResponse {
-    "hello world!"
+    (("Connection","Close"),"hello world!")
 }
 
 
@@ -178,6 +179,7 @@ async fn web_task(
                     "{handled_requests_count} requests handled from {:?}",
                     socket.remote_endpoint()
                 );
+                socket.close();
             }
             Err(err) => log::error!("{err:?}"),
         }
