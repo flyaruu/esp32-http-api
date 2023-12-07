@@ -15,7 +15,7 @@ use hal::{clock::ClockControl, peripherals::Peripherals, prelude::*, IO, timer::
 use picoserve::{Router, routing::get, response::IntoResponse};
 
 
-use static_cell::{StaticCell, make_static};
+use static_cell::make_static;
 
 
 use embedded_svc::wifi::{ClientConfiguration, Configuration, Wifi};
@@ -62,7 +62,6 @@ fn main() -> ! {
     let system = peripherals.SYSTEM.split();
     let clocks = ClockControl::max(system.clock_control).freeze();
     // let mut delay = Delay::new(&clocks);
-    static EXECUTOR: StaticCell<Executor> = StaticCell::new();
 
     // setup logger
     // To change the log_level change the env section in .cargo/config.toml
@@ -70,17 +69,13 @@ fn main() -> ! {
     // this requires a clean rebuild because of https://github.com/rust-lang/cargo/issues/10358
     esp_println::logger::init_logger_from_env();
     log::info!("Logger is setup");
-    println!("Hello world!");
 
     let io = IO::new(peripherals.GPIO,peripherals.IO_MUX);
 
     hal::interrupt::enable(hal::peripherals::Interrupt::GPIO, hal::interrupt::Priority::Priority1).unwrap();
-
-    let executor = EXECUTOR.init(Executor::new());
-
+    let executor = make_static!(Executor::new());
     let timer_group = TimerGroup::new(peripherals.TIMG0, &clocks);    
     embassy::init(&clocks,timer_group.timer0);
-    // accel_stepper::Device
 
     let timer = SystemTimer::new(peripherals.SYSTIMER).alarm0;
     let init = initialize(
