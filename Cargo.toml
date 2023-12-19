@@ -30,7 +30,7 @@ embassy-net = { version = "0.2.1", features = ["nightly","medium-ip", "tcp", "me
 embedded-hal-async = "1.0.0-rc.1"
 embassy-net-driver = "0.2.0"
 embedded-io-async = { version = "0.6.0" }
-picoserve = "0.2.3"
+picoserve = "0.3.0"
 
 serde = { version = "1.0", default-features = false, features = ["derive"] }
 serde_json = { version = "1.0.108", features = ["alloc"], default-features = false }

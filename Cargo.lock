@@ -1109,9 +1109,9 @@ checksum = "de3145af08024dea9fa9914f381a17b8fc6034dfb00f3a84013f7ff43f29ed4c"
 
 [[package]]
 name = "picoserve"
-version = "0.2.3"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f8fd7235219170d0f52b9563795bcc913fd5637fb953ced09e5f45f09040d5a"
+checksum = "ab20855a694e13dddfd360685e5bc78fb28cef2581237e6c83f91c79a59aa6da"
 dependencies = [
  "data-encoding",
  "embedded-io-async",

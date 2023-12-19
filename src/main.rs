@@ -1,6 +1,7 @@
 #![no_std]
 #![no_main]
 #![feature(type_alias_impl_trait)]
+#![feature(result_flattening)]
 
 extern crate alloc;
 use core::mem::MaybeUninit;
@@ -13,6 +14,7 @@ use esp_println::println;
 use esp_wifi::{EspWifiInitFor, initialize, wifi::{WifiStaDevice, WifiController, WifiState, WifiEvent, WifiDevice}};
 use hal::{clock::ClockControl, peripherals::Peripherals, prelude::*, IO, timer::TimerGroup, embassy, systimer::SystemTimer, Rng};
 
+use log::info;
 use picoserve::{Router, routing::get, response::{IntoResponse, HeadersIter}};
 
 
@@ -107,6 +109,7 @@ fn main() -> ! {
     let pico_config = make_static!(picoserve::Config {
         start_read_request_timeout: Some(Duration::from_secs(5)),
         read_request_timeout: Some(Duration::from_secs(1)),
+        write_timeout:  Some(Duration::from_secs(1)),
     });
 
     executor.run(|spawner| {
