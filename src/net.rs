@@ -7,7 +7,6 @@ use esp_wifi::wifi::{WifiController, WifiState, WifiEvent, WifiDevice, WifiStaDe
 const SSID: &str = env!("SSID");
 const PASSWORD: &str = env!("PASSWORD");
 
-
 #[embassy_executor::task]
 pub async fn connection(mut controller: WifiController<'static>) {
     println!("start connection task");
