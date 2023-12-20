@@ -466,9 +466,9 @@ dependencies = [
 
 [[package]]
 name = "esp-backtrace"
-version = "0.8.0"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4c7d3ecccb0df809cb6ca79b08f863271c0aa24f586df96272988a85d34dfa62"
+checksum = "50f1f532fb2f820e2eeb7e5c7d479cdb8bdd939fe5d5a33c511e94371b0667ae"
 dependencies = [
  "esp-println",
 ]
@@ -535,9 +535,9 @@ dependencies = [
 
 [[package]]
 name = "esp-println"
-version = "0.6.0"
+version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "79b429ea925356d60c10d7214cf0e1777d9578c1287cd50aad09df3c22c4c2f1"
+checksum = "678ad508e8e61561eccee27003a5033901fe07fe8700508c324849b3df930ef5"
 dependencies = [
  "critical-section",
  "log",
@@ -567,8 +567,9 @@ dependencies = [
 
 [[package]]
 name = "esp-wifi"
-version = "0.1.0"
-source = "git+https://github.com/esp-rs/esp-wifi/?rev=5166089#516608916e71671e99c234511df93801fde2d3a3"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c7d63238617d88e12989ca665a01216c8235e51fb968fee84418cec605498a51"
 dependencies = [
  "atomic-polyfill",
  "atomic_enum",
@@ -602,7 +603,8 @@ dependencies = [
 [[package]]
 name = "esp-wifi-sys"
 version = "0.1.0"
-source = "git+https://github.com/esp-rs/esp-wifi/?rev=5166089#516608916e71671e99c234511df93801fde2d3a3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5f768a41dbcdaffad531cd64e26952befca118221e36a963db1d735bce48dc69"
 dependencies = [
  "anyhow",
 ]
@@ -646,7 +648,7 @@ dependencies = [
  "esp-backtrace",
  "esp-println",
  "esp-wifi",
- "esp32c3-hal",
+ "esp32s3-hal",
  "heapless 0.7.17",
  "log",
  "picoserve",
@@ -692,7 +694,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2b11a787ccbf8dfb1895c1fe1207effc002061e0fc705fa1d633dd88bbf9f5c"
 dependencies = [
  "cfg-if",
- "embassy-time",
  "esp-hal-common",
 ]
 
@@ -753,6 +754,7 @@ version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "567d3c5f0d708028533811bb255b099aff0a7d61e2ddbf0b44d2485eeb612c99"
 dependencies = [
+ "embassy-time",
  "esp-hal-common",
 ]
 

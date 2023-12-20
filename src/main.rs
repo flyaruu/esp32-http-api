@@ -2,6 +2,7 @@
 #![no_main]
 #![feature(type_alias_impl_trait)]
 #![feature(result_flattening)]
+#![feature(async_fn_in_trait)]
 
 extern crate alloc;
 use core::mem::MaybeUninit;
@@ -56,9 +57,11 @@ fn main() -> ! {
     hal::interrupt::enable(hal::peripherals::Interrupt::GPIO, hal::interrupt::Priority::Priority1).unwrap();
     let executor = make_static!(Executor::new());
     let timer_group = TimerGroup::new(peripherals.TIMG0, &clocks);    
+    let timer = TimerGroup::new(peripherals.TIMG1, &clocks).timer0;
+
     embassy::init(&clocks,timer_group.timer0);
 
-    let timer = SystemTimer::new(peripherals.SYSTIMER).alarm0;
+    // let timer = SystemTimer::new(peripherals.SYSTIMER).alarm0;
     let init = initialize(
         EspWifiInitFor::Wifi,
         timer,

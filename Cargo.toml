@@ -6,20 +6,18 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-hal = { package = "esp32c3-hal", version = "0.13.0", features=["embassy","async","embassy-time-timg0"] }
-esp-backtrace = { version = "0.8.0", features = ["esp32c3", "panic-handler", "exception-handler", "print-uart"] }
-esp-println = { version = "0.6.0", features = ["esp32c3","log"] }
+hal = { package = "esp32s3-hal", version = "0.13.0", features=["embassy","async","embassy-time-timg0"] }
+esp-backtrace = { version = "0.9.0", features = ["esp32s3", "panic-handler", "exception-handler", "print-uart"] }
+esp-println = { version = "0.7.0", features = ["esp32s3","log"] }
 log = { version = "0.4.18" }
 esp-alloc = { version = "0.3.0" }
-esp-wifi  = { git = "https://github.com/esp-rs/esp-wifi/", rev = "5166089", features = ["esp32c3", "wifi", "embassy-net", "async"] }
-
+esp-wifi  = { version = "0.1.1", features = ["esp32s3", "wifi", "embassy-net", "async"] }
 smoltcp = { version = "0.10.0", default-features=false, features = ["proto-igmp", "proto-ipv4", "socket-tcp", "socket-icmp", "socket-udp", "medium-ethernet", "proto-dhcpv4", "socket-raw", "socket-dhcpv4"] }
 embedded-svc = { version = "0.26.1", default-features = false, features = [] }
-
 embedded-io = "0.4.0"
 heapless = { version = "0.7.14", default-features = false }
 embassy-time = "0.1.5"
-embassy-executor = { version = "=0.3.2", features = ["nightly", "integrated-timers","arch-riscv32","executor-thread"] }
+embassy-executor = { version = "=0.3.2", features = ["nightly", "integrated-timers","arch-xtensa","executor-thread"] }
 
 static_cell = { version="=1.2.0", features = ["nightly"] }
 embassy-sync = "0.3.0"
