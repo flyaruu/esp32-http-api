@@ -5,13 +5,14 @@
 
 extern crate alloc;
 use core::mem::MaybeUninit;
-use embassy_executor::Executor;
+use alloc::boxed::Box;
 use embassy_net::{Config, Stack, StackResources};
 use embassy_time::Duration;
 use esp_backtrace as _;
 use esp_wifi::{EspWifiInitFor, initialize, wifi::WifiStaDevice};
-use hal::{clock::ClockControl, peripherals::Peripherals, prelude::*, IO, timer::TimerGroup, embassy, systimer::SystemTimer, Rng};
+use esp_hal::{clock::ClockControl, embassy::{self, executor::Executor}, peripherals::Peripherals, prelude::*, systimer::SystemTimer, timer::TimerGroup, Rng, IO};
 
+use picoserve::{KeepAlive, ShutdownMethod, Timeouts};
 use static_cell::make_static;
 
 
@@ -53,10 +54,10 @@ fn main() -> ! {
 
     let io = IO::new(peripherals.GPIO,peripherals.IO_MUX);
 
-    hal::interrupt::enable(hal::peripherals::Interrupt::GPIO, hal::interrupt::Priority::Priority1).unwrap();
-    let executor = make_static!(Executor::new());
+    esp_hal::interrupt::enable(esp_hal::peripherals::Interrupt::GPIO, esp_hal::interrupt::Priority::Priority1).unwrap();
+    let executor = Box::leak(Box::new(Executor::new()));
     let timer_group = TimerGroup::new(peripherals.TIMG0, &clocks);    
-    embassy::init(&clocks,timer_group.timer0);
+    embassy::init(&clocks,timer_group);
 
     let timer = SystemTimer::new(peripherals.SYSTIMER).alarm0;
     let init = initialize(
@@ -72,21 +73,26 @@ fn main() -> ! {
     let (wifi_interface, controller) =
         esp_wifi::wifi::new_with_mode(&init, wifi, WifiStaDevice).unwrap();
     let config = Config::dhcpv4(Default::default());
-
+    let stack_resources = Box::leak(Box::new(StackResources::<3>::new()));
     let seed = 1234; // very random, very secure seed
 
-    // Init network stack
-    let stack = &*make_static!(Stack::new(
+    let stack = Stack::new(
         wifi_interface,
         config,
-        make_static!(StackResources::<3>::new()),
+        stack_resources,
         seed
-    ));
-    let pico_config = make_static!(picoserve::Config {
-        start_read_request_timeout: Some(Duration::from_secs(5)),
-        read_request_timeout: Some(Duration::from_secs(1)),
-        write_timeout:  Some(Duration::from_secs(1)),
-    });
+    );
+    let stack = Box::leak(Box::new(stack));
+
+    let pico_config = Box::leak(Box::new(picoserve::Config {
+        timeouts : Timeouts { 
+            start_read_request: Some(Duration::from_secs(5)),
+            read_request:Some(Duration::from_secs(1)),
+            write: Some(Duration::from_secs(1)) 
+        },
+        connection: KeepAlive::KeepAlive,
+        shutdown_method: ShutdownMethod::Shutdown,
+    }));
 
     executor.run(|spawner| {
         spawner.spawn(connection(controller)).unwrap();

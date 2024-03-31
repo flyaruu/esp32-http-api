@@ -58,27 +58,20 @@ pub async fn web_task(
             socket.remote_endpoint()
         );
 
-        let (socket_rx, socket_tx) = socket.split();
+        // let (socket_rx, socket_tx) = socket.split();
 
         let app = Router::new()
             .route("/", get(get_root))
         ;
         match picoserve::serve(
             &app,
-            EmbassyTimer,
-            config,
+            &config,
             &mut [0; 2048],
-            socket_rx,
-            socket_tx,
+            socket,
             )
         .await
         {
             Ok(handled_requests_count) => {
-                log::info!(
-                    "{handled_requests_count} requests handled from {:?}",
-                    socket.remote_endpoint()
-                );
-                socket.close();
             }
             Err(err) => log::error!("{err:?}"),
         }

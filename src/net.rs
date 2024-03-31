@@ -1,9 +1,7 @@
 use embassy_net::Stack;
 use embassy_time::{Duration, Timer};
-use embedded_svc::wifi::{Configuration, ClientConfiguration, Wifi};
 use esp_println::println;
-use esp_wifi::wifi::{WifiController, WifiState, WifiEvent, WifiDevice, WifiStaDevice};
-
+use esp_wifi::wifi::{ClientConfiguration, Configuration, WifiController, WifiDevice, WifiEvent, WifiStaDevice, WifiState};
 const SSID: &str = env!("SSID");
 const PASSWORD: &str = env!("PASSWORD");
 
@@ -22,8 +20,8 @@ pub async fn connection(mut controller: WifiController<'static>) {
         
         if !matches!(controller.is_ap_enabled(), Ok(true)) {
             let client_config = Configuration::Client(ClientConfiguration {
-                ssid: SSID.into(),
-                password: PASSWORD.into(),
+                ssid: SSID.try_into().unwrap(),
+                password: PASSWORD.try_into().unwrap(),
                 ..Default::default()
             });
             controller.set_configuration(&client_config).unwrap();
@@ -45,5 +43,6 @@ pub async fn connection(mut controller: WifiController<'static>) {
 
 #[embassy_executor::task]
 pub async fn net_task(stack: &'static Stack<WifiDevice<'static,WifiStaDevice >>) {
+    println!("Staring net");
     stack.run().await
 }

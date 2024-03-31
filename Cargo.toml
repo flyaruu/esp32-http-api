@@ -6,32 +6,66 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-hal = { package = "esp32c3-hal", version = "0.13.0", features=["embassy","async","embassy-time-timg0"] }
-esp-backtrace = { version = "0.8.0", features = ["esp32c3", "panic-handler", "exception-handler", "print-uart"] }
-esp-println = { version = "0.6.0", features = ["esp32c3","log"] }
-log = { version = "0.4.18" }
+esp-backtrace = { version = "0.11.0", features = [
+    "esp32c3",
+    "exception-handler",
+    "panic-handler",
+    "println",
+] }
+esp-hal = { version = "0.16.1", default-features=false, features = [ "rt", "vectored", "embassy-integrated-timers", "esp32c3", "async", "embassy","rt", "embassy-time-timg0","embassy-executor-thread" ] }
+
+esp-println = { version = "0.9.0", features = ["esp32c3", "log"] }
+log = { version = "0.4.20" }
 esp-alloc = { version = "0.3.0" }
-esp-wifi  = { git = "https://github.com/esp-rs/esp-wifi/", rev = "5166089", features = ["esp32c3", "wifi", "embassy-net", "async"] }
-
-smoltcp = { version = "0.10.0", default-features=false, features = ["proto-igmp", "proto-ipv4", "socket-tcp", "socket-icmp", "socket-udp", "medium-ethernet", "proto-dhcpv4", "socket-raw", "socket-dhcpv4"] }
 embedded-svc = { version = "0.26.1", default-features = false, features = [] }
+embedded-io = "0.6.1"
+esp-wifi = { version = "0.4.0", features = [
+    "esp32c3",
+    "phy-enable-usb",
+    "utils",
+    "wifi-default",
+    "embassy-net",
+    "async"
+] }
 
-embedded-io = "0.4.0"
-heapless = { version = "0.7.14", default-features = false }
-embassy-time = "0.1.5"
-embassy-executor = { version = "=0.3.2", features = ["nightly", "integrated-timers","arch-riscv32","executor-thread"] }
+heapless = { version = "0.8.0", default-features = false }
+smoltcp = { version = "0.10.0", default-features = false, features = [
+    "medium-ethernet",
+    "proto-dhcpv4",
+    "proto-igmp",
+    "proto-ipv4",
+    "socket-dhcpv4",
+    "socket-icmp",
+    "socket-raw",
+    "socket-tcp",
+    "socket-udp",
+] }
 
-static_cell = { version="=1.2.0", features = ["nightly"] }
-embassy-sync = "0.3.0"
-embassy-futures = "0.1.0"
-embedded-hal = { version="=1.0.0-rc.1" }
-embassy-net = { version = "0.2.1", features = ["nightly","medium-ip", "tcp", "medium-ethernet", "dhcpv4", "log", "udp"] }
+embassy-sync = "0.5.0"
+embassy-net = { version = "0.4.0", features = ["dhcpv4", "dns", "medium-ip", "medium-ethernet", "tcp", "udp"] }
+embassy-executor = { version = "0.5", features = ["nightly", "integrated-timers","executor-thread"] }
 
-embedded-hal-async = "1.0.0-rc.1"
-embassy-net-driver = "0.2.0"
-embedded-io-async = { version = "0.6.0" }
-picoserve = "0.3.0"
+embassy-time = "0.3.0"
+static_cell = { version = "2.0.0", features = ["nightly"] }
+embedded-nal-async = "0.7.1"
+thiserror-no-std = "2.0.2"
+rand_core = "0.6.4"
+picoserve = {version="0.10.0", features = ["embassy"]}
 
 serde = { version = "1.0", default-features = false, features = ["derive"] }
 serde_json = { version = "1.0.108", features = ["alloc"], default-features = false }
 
+
+[profile.dev]
+# Rust debug is too slow. 
+# For debug builds always builds with some optimization
+opt-level = "s"
+
+[profile.release]
+codegen-units = 1 # LLVM can perform better optimizations using a single thread
+debug = 2
+debug-assertions = false
+incremental = false
+lto = 'fat'
+opt-level = 's'
+overflow-checks = false
